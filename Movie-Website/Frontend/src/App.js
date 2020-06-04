@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 import MenuItems from "./components/MenuItems"
 import Header from "./components/Header"
