@@ -1,0 +1,15 @@
+.visitweb:hover {
+    background-color: white;
+    color: transparent;
+}
+
+.example::-webkit-scrollbar {
+    display: none;
+  }
+
+@media screen and (max-width:600px){
+    .test {
+        color : red;
+    }
+}
+
