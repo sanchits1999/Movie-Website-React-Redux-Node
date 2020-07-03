@@ -7,6 +7,7 @@ import MuiAlert from '@material-ui/lab/Alert'
 import { connect } from "react-redux"
 import { Redirect, Link } from "react-router-dom"
 import Cookie from "js-cookie"
+import * as actions from "../actions/actions"
 
 
 const Signin = (props) => {
@@ -22,14 +23,23 @@ const Signin = (props) => {
     const [name, setname] = useState("")
     const [password, setpassword] = useState("")
     const [open, setopen] = useState(false)
+    const [loaded, setloaded] = useState(false)
 
 
     useEffect(() => {
         if (props.error === null) {
-            setopen(false)
+            setTimeout(() => {
+                setloaded(true)
+                setopen(false)
+            }, 500)
         } else {
             // alert(props.error)
+            setloaded(true)
             setopen(true)
+            setTimeout(() => {
+                setopen(false)
+                props.seterror()
+            }, 2000)
         }
     }, [props.error])
 
@@ -50,8 +60,16 @@ const Signin = (props) => {
 
         <div style={{ height: "100vh", width: "100%", backgroundColor: "#ffffff", display: "flex", flexDirection: "row" }}>
             {props.jwt !== null ? <Redirect to="/home/toprated" /> : null}
+            {!loaded ? <div style={{ width: window.innerWidth, height: window.innerHeight, zIndex: 100, position: "absolute", backgroundColor: "#000000" }}>
+                <div class="ui segment" style={{ width: "100%", height: "100%", border: "0px solid white" }}>
+                    <p></p>
+                    <div class="ui active dimmer">
+                        <div class="ui loader"></div>
+                    </div>
+                </div>
+            </div> : null}
             <div style={{ flex: 1, display: "flex", justifyContent: "center", alignItems: "center", flexDirection: "column" }}>
-                <img src={img} style={{ maxWidth: "100%", height: 400 }} />
+                <img onLoad={() => { setTimeout(() => { setloaded(true) }, 500) }} src={img} style={{ maxWidth: "100%", height: 400 }} />
                 <Link to="/signup" style={{ marginTop: 20, letterSpacing: 0.7, textDecoration: "none" }}>Don't have an account? Signup..</Link>
             </div>
             <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
@@ -107,6 +125,8 @@ const Signin = (props) => {
                             error3: error3,
                         })
                         if (error1 === null & error2 === null & error3 === null) {
+                            setloaded(false)
+                            // props.seterror()
                             props.signin(name, password)
                         }
                     }} />
@@ -131,6 +151,9 @@ const MapdispatchtoProps = (dispatch) => {
         },
         signout: () => {
             dispatch(signout())
+        },
+        seterror: () => {
+            dispatch(actions.Seterror(null))
         }
     }
 }
